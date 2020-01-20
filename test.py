@@ -16,9 +16,8 @@ netG = MyUnetGenerator(opt.input_nc, opt.output_nc, 8, opt.ngf, norm_layer=norm_
 
 netE = MyEncoder(opt.input_nc, opt.output_nc, 8, opt.ngf, norm_layer=norm_layer, \
                  use_dropout=False, gpu_ids=opt.gpu_ids)
-fold = opt.test_epoch
-netG.load_state_dict(torch.load('./checkpoint/netG_epoch_'+fold+'.weight'))
-netE.load_state_dict(torch.load('./checkpoint/netE_epoch_'+fold+'.weight'))
+netG.load_state_dict(torch.load(opt.checkpoint + '/netG_epoch_'+opt.test_epoch+'.weight'))
+netE.load_state_dict(torch.load(opt.checkpoint + '/netE_epoch_'+opt.test_epoch+'.weight'))
 
 netE.cuda()
 netG.cuda()
@@ -31,7 +30,7 @@ testing_data_loader = DataLoader(dataset=test_set, num_workers=opt.threads, batc
 if not os.path.exists(opt.output):
     os.makedirs(opt.output)
 
-save_dir_A = opt.output + "/" + fold
+save_dir_A = opt.output + "/" + opt.test_epoch
 if not os.path.exists(save_dir_A):
     os.makedirs(save_dir_A)
 for i, batch in enumerate(testing_data_loader):
@@ -56,6 +55,4 @@ for i, batch in enumerate(testing_data_loader):
     # cv2.imwrite(output_name_A, cc)
 
 print " saved"
-
-
 
